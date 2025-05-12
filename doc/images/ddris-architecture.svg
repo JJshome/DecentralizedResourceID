@@ -67,7 +67,7 @@
     <!-- Blockchain Registry -->
     <rect x="100" y="350" width="150" height="80" rx="15" ry="15" fill="url(#grad5)" />
     <text x="175" y="380" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white" text-anchor="middle">Distributed Registry</text>
-    <text x="175" y="400" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle">DLT & Smart Contracts</text>
+    <text x="175" y="400" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle">DLT &amp; Smart Contracts</text>
     
     <!-- Relationship Manager -->
     <rect x="325" y="350" width="150" height="80" rx="15" ry="15" fill="url(#grad6)" />
