@@ -1,115 +1,147 @@
-# Decentralized Digital Resource Integrated ID System
+# Decentralized Digital Resource ID System
 
-A comprehensive system for decentralized identification, verification, and management of diverse digital resources including text, images, audio, video, AI models, and datasets.
+A comprehensive system for managing decentralized identifiers (DIDs) for various types of digital resources including text, images, audio, video, AI models, and datasets. Built on open standards and designed to provide secure, verifiable, and interoperable management of digital assets.
 
-![Digital Resource ID System](doc/images/system_overview.svg)
+## Key Features
 
-## Overview
+- **Resource-specific DIDs**: Generate W3C compliant DIDs tailored to different resource types
+- **Hierarchical Metadata**: Integrate multiple standards (DID, C2PA, Model Cards, PROV) for comprehensive resource description
+- **Multi-layer Watermarking**: Resource-type specific watermarking techniques including AI model watermarking
+- **Relationship Tracking**: PROV-compatible graph model for tracking relationships between resources
+- **Distributed Registry**: Blockchain-based registry with off-chain storage for efficient resource management
+- **AI Context Integration**: Model Context Protocol (MCP) and model card integration for AI resources
+- **Execution Structures**: Support for defining executable combinations of multiple resources
 
-The Decentralized Digital Resource Integrated ID System provides a comprehensive framework for managing digital resources in a decentralized environment. It enables:
+## System Architecture
 
-- **Unified Identification**: Generate and manage decentralized identifiers (DIDs) for diverse digital resources
-- **Comprehensive Metadata**: Hierarchical metadata structure integrating multiple standards
-- **Robust Verification**: Multi-layered watermarking and cryptographic verification
-- **Resource Relationships**: Graph-based modeling of relationships between resources
-- **Execution Capabilities**: Orchestration mechanisms for complex digital resources
-- **Distributed Registry**: Blockchain-based registry for immutable provenance records
+The system consists of the following core components:
 
-## Key Components
+1. **DID Factory**: Generates unique identifiers for digital resources
+2. **Hierarchical Metadata Manager**: Handles layered metadata from multiple standards
+3. **Watermark Manager**: Embeds and detects watermarks in different resource types
+4. **Resource Relationship Manager**: Tracks relationships between digital resources
+5. **Distributed Registry**: Manages resource registration on distributed ledgers
+6. **AI Model Context Manager**: Handles AI model-specific context information
 
-### 1. Identifier Generation
+## Standards Support
 
-Using W3C DID standards to create persistent, decentralized identifiers for digital assets with:
-- Asset-specific DID methods
-- Compressed representations
-- Cryptographic signatures
-- Resolution mechanisms
+This system implements and integrates multiple open standards:
 
-### 2. Hierarchical Metadata
+- [W3C Decentralized Identifiers (DIDs)](https://www.w3.org/TR/did-core/)
+- [C2PA (Coalition for Content Provenance and Authenticity)](https://c2pa.org/)
+- [Model Cards](https://modelcards.withgoogle.com/about)
+- [W3C PROV](https://www.w3.org/TR/prov-overview/)
+- [MPEG-21 Rights Expression Language](https://mpeg.chiariglione.org/standards/mpeg-21/rights-expression-language)
+- [Model Context Protocol (MCP)](https://github.com/anthropics/model-context-protocol)
 
-A layered metadata structure combining multiple standards:
-- DID for basic identification
-- C2PA for provenance and integrity
-- Asset-specific schemas (Model Cards, Open Datasheets)
-- W3C PROV for comprehensive provenance graphs
-- Rights management frameworks
+## Installation
 
-### 3. Multi-layer Watermarking
+```bash
+npm install decentralized-resource-id
+```
 
-Resource-specific watermarking techniques:
-- Text: Unicode space manipulation, punctuation variations
-- Images: Spatial and transform domain techniques
-- AI Models: Combined whitebox and blackbox approaches
-- Verification service endpoints
+## Basic Usage
 
-### 4. Relationship Management
+```javascript
+const { DecentralizedResourceIDSystem, RESOURCE_TYPES } = require('decentralized-resource-id');
 
-Graph-based modeling of resource relationships:
-- Structural relationships (contains, isPartOf)
-- Provenance relationships (derivedFrom, generatedBy)
-- Dependency relationships (dependsOn, requires)
-- W3C PROV ontology integration
+// Create system instance
+const system = new DecentralizedResourceIDSystem();
 
-### 5. Execution Structure
+// Initialize system
+await system.initialize();
 
-Mechanisms for orchestrating complex digital resources:
-- Resource composition manifests
-- Dependency graphs
-- Execution sequencing
-- Interface definitions
-- Environment requirements
+// Register a text resource
+const textRegistration = await system.registerResource(
+  'This is a sample text.',
+  RESOURCE_TYPES.TEXT,
+  {
+    name: 'Sample Text',
+    description: 'A simple text example',
+    creator: 'Example User'
+  }
+);
 
-### 6. Distributed Registry
+console.log('Resource registered with DID:', textRegistration.did);
+```
 
-Blockchain-based registry with:
-- On-chain core metadata and event records
-- Off-chain storage for large metadata
-- Smart contracts for rights management
-- Verifiable Credentials integration
+For more detailed examples, see the [examples](./examples) directory.
 
-## Architecture
+## Key Concepts
 
-![System Architecture](doc/images/architecture.svg)
+### DID Structure
 
-The system follows a layered architecture pattern:
+DIDs generated by the system follow this structure:
 
-1. **Core Layer**: Fundamental identification and cryptographic operations
-2. **Resource Layer**: Type-specific resource handling
-3. **Service Layer**: Functional services (registration, verification, query)
-4. **Integration Layer**: External system integrations
-5. **Application Layer**: User-facing applications and interfaces
+```
+did:asset:resource-type:base64url-encoded-id
+```
 
-## Implementation
+For example:
+```
+did:asset:ai-model:X2dhc3NldDphaS1tb2RlbDpYMmRoYzNObGREcGhhUzF0YjJSbGJEcFlNbVJvWXpOellYTnpaWFE2
+```
 
-The implementation is organized into core components:
+### Hierarchical Metadata
 
-![Component Diagram](doc/images/components.svg)
+The metadata structure follows a layered approach:
 
-- **Identifier Generator**: Creates DIDs for various resource types
-- **Metadata Manager**: Handles hierarchical metadata creation and management
-- **Watermarking Engine**: Applies and verifies resource-specific watermarks
-- **Registry Connector**: Interfaces with distributed ledger technologies
-- **Relationship Manager**: Maintains resource relationship graphs
-- **Execution Orchestrator**: Manages complex resource execution
+1. **Identification Layer**: DID and basic information
+2. **Provenance Layer**: C2PA-based origin and integrity information
+3. **Characteristics Layer**: Resource-specific metadata (Model Cards, Data Sheets)
+4. **Lineage Layer**: W3C PROV-based genealogy
+5. **Rights Layer**: MPEG-21 REL rights management information
 
-## Usage Scenarios
+### Watermarking Techniques
 
-![Usage Scenarios](doc/images/scenarios.svg)
+Different resource types use specialized watermarking approaches:
 
-1. **AI Model Provenance**: Track the origin, training data, and derivation of AI models
-2. **Content Authentication**: Verify the authenticity and integrity of digital content
-3. **Complex Resource Management**: Manage interdependent resources as unified entities
-4. **Rights Management**: Track ownership and usage rights across resource lifecycles
+- **Text**: Unicode space characters, punctuation variations, line break patterns
+- **Images**: LSB encoding, DCT/DWT frequency domain methods, feature-based approaches
+- **AI Models**: White-box (weight parameters) and black-box (output distribution) techniques
+- **Datasets**: Structure-preserving metadata embedding
 
-## Getting Started
+### Relationship Types
 
-See the [deployment guide](deployment/README.md) for instructions on setting up the system.
+Resource relationships are categorized as:
 
-## Project Structure
+- **Structural**: contains, isPartOf, hasComponent
+- **Derivation**: wasDerivedFrom, wasRevisionOf
+- **Generation**: wasGeneratedBy, used, wasAttributedTo
+- **Dependency**: dependsOn, requires, uses
 
-- `src/`: Source code implementing the system components
-- `doc/`: Documentation including specifications and guides
-- `deployment/`: Deployment configurations and scripts
-- `Scientific_papers/`: Research papers and standards references
+## Advanced Features
 
-Patent Pending
+### AI Model Registration
+
+```javascript
+const modelRegistration = await system.registerAIModel(
+  modelData,
+  modelCard,
+  mcpInterfaces
+);
+```
+
+### Execution Structures
+
+```javascript
+const executionStructure = await system.createExecutionStructure(
+  [modelDid, datasetDid],
+  {
+    executionOrder: [datasetDid, modelDid],
+    interfaceDefinitions: {...}
+  }
+);
+```
+
+## License
+
+[MIT](LICENSE)
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## Acknowledgments
+
+This project integrates and builds upon various open standards and technologies in the digital identity, provenance tracking, and AI domains.
