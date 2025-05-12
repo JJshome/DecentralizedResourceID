@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    @keyframes pulse {
+      0% { opacity: 0.7; }
+      50% { opacity: 1; }
+      100% { opacity: 0.7; }
+    }
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+    .component { fill: #4285F4; stroke: #2A56C6; stroke-width: 2; }
+    .component:hover { fill: #5C9CFF; cursor: pointer; }
+    .central { fill: #34A853; stroke: #1E7E34; stroke-width: 3; }
+    .flow { stroke: #FBBC05; stroke-width: 3; fill: none; stroke-dasharray: 8; }
+    .data { fill: #EA4335; stroke: #C62A1A; stroke-width: 2; }
+    .text { font-family: Arial, sans-serif; font-size: 14px; fill: white; text-anchor: middle; }
+    .title { font-family: Arial, sans-serif; font-size: 24px; font-weight: bold; fill: #333; text-anchor: middle; }
+    .subtitle { font-family: Arial, sans-serif; font-size: 18px; fill: #666; text-anchor: middle; }
+    .flow-animation { animation: pulse 3s infinite; }
+    .rotate-animation { animation: rotate 10s linear infinite; }
+    .float-animation { animation: float 3s ease-in-out infinite; }
+  </style>
+  
+  <!-- Background -->
+  <rect width="800" height="600" fill="#F8F9FA" rx="20" ry="20" />
+  
+  <!-- Title -->
+  <text x="400" y="50" class="title">Decentralized Digital Resource ID System</text>
+  <text x="400" y="80" class="subtitle">System Architecture</text>
+  
+  <!-- Central Component -->
+  <g class="float-animation">
+    <circle cx="400" cy="300" r="70" class="central" />
+    <text x="400" y="300" class="text">Decentralized Resource ID System</text>
+    <text x="400" y="320" class="text" style="font-size: 12px;">Core Integration</text>
+  </g>
+  
+  <!-- DID Factory -->
+  <g class="component-group">
+    <rect x="150" y="180" width="120" height="60" rx="10" ry="10" class="component" />
+    <text x="210" y="215" class="text">DID Factory</text>
+    <path d="M270 210 L330 300" class="flow flow-animation" />
+  </g>
+  
+  <!-- Metadata Manager -->
+  <g class="component-group">
+    <rect x="150" y="360" width="120" height="60" rx="10" ry="10" class="component" />
+    <text x="210" y="395" class="text">Metadata Manager</text>
+    <path d="M270 390 L330 300" class="flow flow-animation" />
+  </g>
+  
+  <!-- Watermark Manager -->
+  <g class="component-group">
+    <rect x="530" y="180" width="120" height="60" rx="10" ry="10" class="component" />
+    <text x="590" y="215" class="text">Watermark Manager</text>
+    <path d="M530 210 L470 300" class="flow flow-animation" />
+  </g>
+  
+  <!-- Relationship Manager -->
+  <g class="component-group">
+    <rect x="530" y="360" width="120" height="60" rx="10" ry="10" class="component" />
+    <text x="590" y="395" class="text">Relationship Manager</text>
+    <path d="M530 390 L470 300" class="flow flow-animation" />
+  </g>
+  
+  <!-- Registry -->
+  <g class="component-group">
+    <rect x="340" y="480" width="120" height="60" rx="10" ry="10" class="component" />
+    <text x="400" y="515" class="text">Distributed Registry</text>
+    <path d="M400 480 L400 370" class="flow flow-animation" />
+  </g>
+  
+  <!-- AI Context Manager -->
+  <g class="component-group">
+    <rect x="340" y="120" width="120" height="60" rx="10" ry="10" class="component" />
+    <text x="400" y="155" class="text">AI Context Manager</text>
+    <path d="M400 180 L400 230" class="flow flow-animation" />
+  </g>
+  
+  <!-- Data Icons -->
+  <g class="rotate-animation" style="transform-origin: 90px 270px;">
+    <circle cx="90" cy="270" r="25" class="data" />
+    <text x="90" y="275" class="text" style="font-size: 12px;">DIDs</text>
+  </g>
+  
+  <g class="rotate-animation" style="transform-origin: 710px 270px;">
+    <circle cx="710" cy="270" r="25" class="data" />
+    <text x="710" y="275" class="text" style="font-size: 12px;">Metadata</text>
+  </g>
+  
+  <g class="float-animation">
+    <circle cx="210" cy="500" r="25" class="data" />
+    <text x="210" y="505" class="text" style="font-size: 12px;">Relations</text>
+  </g>
+  
+  <g class="float-animation">
+    <circle cx="590" cy="500" r="25" class="data" />
+    <text x="590" y="505" class="text" style="font-size: 12px;">Resources</text>
+  </g>
+</svg>
