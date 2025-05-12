@@ -1,147 +1,112 @@
-# Decentralized Digital Resource ID System
+# Decentralized Digital Resource Integrated ID System (DDRIS)
 
-A comprehensive system for managing decentralized identifiers (DIDs) for various types of digital resources including text, images, audio, video, AI models, and datasets. Built on open standards and designed to provide secure, verifiable, and interoperable management of digital assets.
+![Main Architecture](doc/images/ddris-architecture.svg)
 
-## Key Features
+DDRIS is a comprehensive framework for managing digital resources across distributed environments. It provides a unified identification and management system for various types of digital assets including text, images, audio, video, AI models, datasets, and executable code.
 
-- **Resource-specific DIDs**: Generate W3C compliant DIDs tailored to different resource types
-- **Hierarchical Metadata**: Integrate multiple standards (DID, C2PA, Model Cards, PROV) for comprehensive resource description
-- **Multi-layer Watermarking**: Resource-type specific watermarking techniques including AI model watermarking
-- **Relationship Tracking**: PROV-compatible graph model for tracking relationships between resources
-- **Distributed Registry**: Blockchain-based registry with off-chain storage for efficient resource management
-- **AI Context Integration**: Model Context Protocol (MCP) and model card integration for AI resources
-- **Execution Structures**: Support for defining executable combinations of multiple resources
+## Overview
 
-## System Architecture
+In modern digital environments, diverse types of digital resources are created and distributed. These resources are easily replicated, modified, and redistributed through the internet, creating challenges in original identification, source tracking, ownership verification, and integrity validation.
 
-The system consists of the following core components:
+DDRIS addresses these challenges through:
 
-1. **DID Factory**: Generates unique identifiers for digital resources
-2. **Hierarchical Metadata Manager**: Handles layered metadata from multiple standards
-3. **Watermark Manager**: Embeds and detects watermarks in different resource types
-4. **Resource Relationship Manager**: Tracks relationships between digital resources
-5. **Distributed Registry**: Manages resource registration on distributed ledgers
-6. **AI Model Context Manager**: Handles AI model-specific context information
+1. **Unified Identification** - Creates, manages, and utilizes integrated identifiers across distributed environments
+2. **Metadata Management** - Provides hierarchical metadata structures tailored to different resource types
+3. **Ownership Validation** - Ensures traceable ownership and provenance of digital resources
+4. **Integrity Verification** - Validates the integrity of resources using cryptographic techniques
+5. **Relationship Management** - Defines and manages relationships between multiple digital resources
 
-## Standards Support
+![Resource Relationships](doc/images/resource-relationships.svg)
 
-This system implements and integrates multiple open standards:
+## Key Components
 
-- [W3C Decentralized Identifiers (DIDs)](https://www.w3.org/TR/did-core/)
-- [C2PA (Coalition for Content Provenance and Authenticity)](https://c2pa.org/)
-- [Model Cards](https://modelcards.withgoogle.com/about)
-- [W3C PROV](https://www.w3.org/TR/prov-overview/)
-- [MPEG-21 Rights Expression Language](https://mpeg.chiariglione.org/standards/mpeg-21/rights-expression-language)
-- [Model Context Protocol (MCP)](https://github.com/anthropics/model-context-protocol)
+### DID-Based Identification
 
-## Installation
+DDRIS uses W3C Decentralized Identifiers (DIDs) as the foundation for resource identification:
 
-```bash
-npm install decentralized-resource-id
-```
+- Resource-specific DID methods tailored to different asset types
+- Integration with existing identifier systems (DOI, SWHID)
+- Compressed encoding for efficient storage and transmission
+- Digital signatures for authentication and integrity verification
 
-## Basic Usage
+### Hierarchical Metadata Architecture
 
-```javascript
-const { DecentralizedResourceIDSystem, RESOURCE_TYPES } = require('decentralized-resource-id');
+![Metadata Architecture](doc/images/metadata-hierarchy.svg)
 
-// Create system instance
-const system = new DecentralizedResourceIDSystem();
+The system implements a layered metadata strategy:
 
-// Initialize system
-await system.initialize();
+- **Base Layer** - DID and fundamental resource information
+- **Provenance Layer** - C2PA manifest for cryptographically-bound provenance information
+- **Resource-Specific Layer** - Asset-type specific metadata (Model Cards, Open Datasheets)
+- **Lineage Layer** - W3C PROV-based comprehensive lineage information
+- **Rights Management Layer** - License and usage rights information
 
-// Register a text resource
-const textRegistration = await system.registerResource(
-  'This is a sample text.',
-  RESOURCE_TYPES.TEXT,
-  {
-    name: 'Sample Text',
-    description: 'A simple text example',
-    creator: 'Example User'
-  }
-);
+### Multi-Layer Watermarking
 
-console.log('Resource registered with DID:', textRegistration.did);
-```
+Different watermarking techniques are applied based on resource type:
 
-For more detailed examples, see the [examples](./examples) directory.
+- **Text** - Unicode space character utilization, punctuation variations
+- **Images** - LSB insertion, frequency domain techniques
+- **Audio** - Spectrum analysis and inaudible region insertion
+- **AI Models** - Combined whitebox (parameter-based) and blackbox (output distribution) watermarking
 
-## Key Concepts
+### Distributed Registry
 
-### DID Structure
+- Blockchain-based immutable record of identifiers and ownership
+- Off-chain storage for large metadata using IPFS
+- Smart contracts for automated rights management
+- Verifiable Credentials for participant authentication
 
-DIDs generated by the system follow this structure:
+### Resource Relationship Management
 
-```
-did:asset:resource-type:base64url-encoded-id
-```
+Resources are interconnected through directed graph relationships:
 
-For example:
-```
-did:asset:ai-model:X2dhc3NldDphaS1tb2RlbDpYMmRoYzNObGREcGhhUzF0YjJSbGJEcFlNbVJvWXpOellYTnpaWFE2
-```
+- Structural relationships (contains, isPartOf)
+- Derivation relationships (derivedFrom, basedOn)
+- Reference relationships (references, cites)
+- Dependency relationships (dependsOn, requires)
 
-### Hierarchical Metadata
+### Execution Structure Metadata
 
-The metadata structure follows a layered approach:
+![Execution Structure](doc/images/execution-structure.svg)
 
-1. **Identification Layer**: DID and basic information
-2. **Provenance Layer**: C2PA-based origin and integrity information
-3. **Characteristics Layer**: Resource-specific metadata (Model Cards, Data Sheets)
-4. **Lineage Layer**: W3C PROV-based genealogy
-5. **Rights Layer**: MPEG-21 REL rights management information
+For executable digital resources, DDRIS provides:
 
-### Watermarking Techniques
+- Component resource list management
+- Dependency graph definition
+- Execution sequence orchestration
+- Interface definition
+- Environment requirements specification
 
-Different resource types use specialized watermarking approaches:
+## Technical Implementation
 
-- **Text**: Unicode space characters, punctuation variations, line break patterns
-- **Images**: LSB encoding, DCT/DWT frequency domain methods, feature-based approaches
-- **AI Models**: White-box (weight parameters) and black-box (output distribution) techniques
-- **Datasets**: Structure-preserving metadata embedding
+### Workflow
 
-### Relationship Types
+1. Resource attribute collection
+2. DID generation based on W3C standards
+3. Cryptographic signature creation
+4. Hierarchical metadata structure generation
+5. Metadata embedding through multi-layer watermarking
+6. Distributed ledger registration
+7. Resource relationship definition
+8. Context-specific information management
 
-Resource relationships are categorized as:
+### Integration Points
 
-- **Structural**: contains, isPartOf, hasComponent
-- **Derivation**: wasDerivedFrom, wasRevisionOf
-- **Generation**: wasGeneratedBy, used, wasAttributedTo
-- **Dependency**: dependsOn, requires, uses
+DDRIS integrates with multiple existing standards:
 
-## Advanced Features
+- W3C DID for resource identification
+- C2PA for provenance and integrity
+- Model Cards & Open Datasheets for AI resources
+- W3C PROV for lineage tracking
+- MPEG-21 REL for rights expression
 
-### AI Model Registration
+## Getting Started
 
-```javascript
-const modelRegistration = await system.registerAIModel(
-  modelData,
-  modelCard,
-  mcpInterfaces
-);
-```
-
-### Execution Structures
-
-```javascript
-const executionStructure = await system.createExecutionStructure(
-  [modelDid, datasetDid],
-  {
-    executionOrder: [datasetDid, modelDid],
-    interfaceDefinitions: {...}
-  }
-);
-```
+*Documentation on implementation and usage coming soon*
 
 ## License
 
-[MIT](LICENSE)
+*License information to be determined*
 
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## Acknowledgments
-
-This project integrates and builds upon various open standards and technologies in the digital identity, provenance tracking, and AI domains.
+*Patent Pending*
