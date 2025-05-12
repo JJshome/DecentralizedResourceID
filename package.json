@@ -1,0 +1,38 @@
+{
+  "name": "decentralized-resource-id",
+  "version": "0.1.0",
+  "description": "A comprehensive system for managing decentralized identifiers (DIDs) for various types of digital resources",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "example": "node examples/basic_usage.js"
+  },
+  "keywords": [
+    "did",
+    "decentralized",
+    "identity",
+    "watermark",
+    "metadata",
+    "ai",
+    "model",
+    "provenance",
+    "c2pa",
+    "blockchain"
+  ],
+  "author": "장지환",
+  "license": "MIT",
+  "dependencies": {
+    "crypto": "^1.0.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JJshome/DecentralizedResourceID.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JJshome/DecentralizedResourceID/issues"
+  },
+  "homepage": "https://github.com/JJshome/DecentralizedResourceID#readme"
+}
