@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    @keyframes pulse {
+      0% { opacity: 0.7; }
+      50% { opacity: 1; }
+      100% { opacity: 0.7; }
+    }
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+    @keyframes watermarkIn {
+      0% { opacity: 0; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.2); }
+      100% { opacity: 0.5; transform: scale(1); }
+    }
+    @keyframes moveAlong {
+      0% { offset-distance: 0%; }
+      100% { offset-distance: 100%; }
+    }
+    .resource { fill: #4285F4; stroke: #2A56C6; stroke-width: 2; }
+    .process { fill: #34A853; stroke: #1E7E34; stroke-width: 2; }
+    .arrow { stroke: #FBBC05; stroke-width: 3; fill: none; marker-end: url(#arrowhead); }
+    .watermark { fill: #EA4335; stroke: #C62A1A; stroke-width: 2; opacity: 0.5; }
+    .watermark-animation { animation: pulse 3s infinite; }
+    .rotate-animation { animation: rotate 15s linear infinite; }
+    .float-animation { animation: float 5s ease-in-out infinite; }
+    .text { font-family: Arial, sans-serif; font-size: 14px; fill: white; text-anchor: middle; }
+    .title { font-family: Arial, sans-serif; font-size: 24px; font-weight: bold; fill: #333; text-anchor: middle; }
+    .subtitle { font-family: Arial, sans-serif; font-size: 18px; fill: #666; text-anchor: middle; }
+    .watermark-text { font-family: Arial, sans-serif; font-size: 12px; fill: #333; text-anchor: middle; }
+    .method-item { font-family: Arial, sans-serif; font-size: 14px; fill: #333; text-anchor: start; }
+    .resource-type { font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; fill: #333; text-anchor: middle; }
+    .ani-watermark { animation: watermarkIn 3s ease-in-out forwards; }
+    .watermark-path { fill: none; stroke: #EA4335; stroke-width: 1; stroke-dasharray: 5,5; }
+    .moving-bit { 
+      animation: moveAlong 5s linear infinite;
+      offset-path: path('M 210,220 C 210,280 310,280 310,220');
+    }
+  </style>
+  
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#FBBC05" />
+    </marker>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.3" />
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="600" fill="#F8F9FA" rx="20" ry="20" />
+  
+  <!-- Title -->
+  <text x="400" y="50" class="title">Multi-layer Watermarking Process</text>
+  <text x="400" y="80" class="subtitle">Resource-specific Watermarking Techniques</text>
+  
+  <!-- Main diagram section -->
+  <g transform="translate(50,120)">
+    <!-- Original Resources -->
+    <g class="float-animation">
+      <!-- Text Resource -->
+      <rect x="40" y="80" width="120" height="80" rx="10" ry="10" class="resource" filter="url(#shadow)" />
+      <text x="100" y="110" class="text">Text Resource</text>
+      <text x="100" y="130" class="text" style="font-size: 10px;">Original Content</text>
+      <text x="100" y="180" class="resource-type">TEXT</text>
+    </g>
+    
+    <g class="float-animation" style="animation-delay: 0.5s">
+      <!-- Image Resource -->
+      <rect x="40" y="240" width="120" height="80" rx="10" ry="10" class="resource" filter="url(#shadow)" />
+      <text x="100" y="270" class="text">Image Resource</text>
+      <text x="100" y="290" class="text" style="font-size: 10px;">Original Content</text>
+      <text x="100" y="340" class="resource-type">IMAGE</text>
+    </g>
+    
+    <g class="float-animation" style="animation-delay: 1s">
+      <!-- AI Model Resource -->
+      <rect x="40" y="400" width="120" height="80" rx="10" ry="10" class="resource" filter="url(#shadow)" />
+      <text x="100" y="430" class="text">AI Model</text>
+      <text x="100" y="450" class="text" style="font-size: 10px;">Original Model</text>
+      <text x="100" y="500" class="resource-type">AI-MODEL</text>
+    </g>
+    
+    <!-- Watermarking Processes -->
+    <!-- Text watermarking -->
+    <g>
+      <path d="M160,120 L250,120" class="arrow" />
+      
+      <rect x="250" y="80" width="120" height="80" rx="10" ry="10" class="process" filter="url(#shadow)" />
+      <text x="310" y="110" class="text">Text Watermark</text>
+      <text x="310" y="130" class="text" style="font-size: 10px;">Unicode Spaces</text>
+      
+      <path class="watermark-path" d="M 210,220 C 210,280 310,280 310,220" />
+      <circle class="moving-bit" cx="10" cy="10" r="5" fill="#EA4335" />
+      
+      <rect x="210" y="150" width="20" height="20" rx="3" ry="3" class="watermark watermark-animation" />
+      <text x="220" y="165" class="watermark-text" style="font-size: 10px;">0</text>
+      
+      <rect x="240" y="150" width="20" height="20" rx="3" ry="3" class="watermark watermark-animation" />
+      <text x="250" y="165" class="watermark-text" style="font-size: 10px;">1</text>
+      
+      <rect x="270" y="150" width="20" height="20" rx="3" ry="3" class="watermark watermark-animation" />
+      <text x="280" y="165" class="watermark-text" style="font-size: 10px;">0</text>
+      
+      <rect x="300" y="150" width="20" height="20" rx="3" ry="3" class="watermark watermark-animation" />
+      <text x="310" y="165" class="watermark-text" style="font-size: 10px;">1</text>
+      
+      <path d="M370,120 L460,120" class="arrow" />
+    </g>
+    
+    <!-- Image watermarking -->
+    <g>
+      <path d="M160,280 L250,280" class="arrow" />
+      
+      <rect x="250" y="240" width="120" height="80" rx="10" ry="10" class="process" filter="url(#shadow)" />
+      <text x="310" y="270" class="text">Image Watermark</text>
+      <text x="310" y="290" class="text" style="font-size: 10px;">LSB / DCT / DWT</text>
+      
+      <g class="rotate-animation" transform="translate(310, 310)">
+        <rect x="-20" y="-20" width="40" height="40" rx="5" ry="5" class="watermark" />
+        <path d="M-15,-15 L15,15 M-15,15 L15,-15" stroke="#C62A1A" stroke-width="2" />
+      </g>
+      
+      <path d="M370,280 L460,280" class="arrow" />
+    </g>
+    
+    <!-- AI Model watermarking -->
+    <g>
+      <path d="M160,440 L250,440" class="arrow" />
+      
+      <rect x="250" y="400" width="120" height="80" rx="10" ry="10" class="process" filter="url(#shadow)" />
+      <text x="310" y="430" class="text">Model Watermark</text>
+      <text x="310" y="450" class="text" style="font-size: 10px;">White/Black Box</text>
+      
+      <!-- Parameters representation -->
+      <g transform="translate(310, 500)">
+        <rect x="-40" y="-30" width="80" height="60" rx="5" ry="5" fill="#F1F3F4" stroke="#DFE1E5" />
+        <text x="0" y="-10" style="font-family: Arial; font-size: 10px; fill: #333; text-anchor: middle;">Model Parameters</text>
+        <rect x="-30" y="0" width="20" height="10" fill="#4285F4" class="ani-watermark" style="animation-delay: 0.5s" />
+        <rect x="-5" y="0" width="20" height="10" fill="#34A853" />
+        <rect x="20" y="0" width="20" height="10" fill="#FBBC05" class="ani-watermark" style="animation-delay: 1s" />
+        <rect x="-30" y="15" width="20" height="10" fill="#EA4335" />
+        <rect x="-5" y="15" width="20" height="10" fill="#4285F4" class="ani-watermark" style="animation-delay: 1.5s" />
+        <rect x="20" y="15" width="20" height="10" fill="#34A853" />
+      </g>
+      
+      <path d="M370,440 L460,440" class="arrow" />
+    </g>
+    
+    <!-- Watermarked Resources -->
+    <g>
+      <!-- Watermarked Text -->
+      <rect x="460" y="80" width="120" height="80" rx="10" ry="10" class="resource" filter="url(#shadow)" />
+      <text x="520" y="110" class="text">Text Resource</text>
+      <text x="520" y="130" class="text" style="font-size: 10px;">Watermarked</text>
+      
+      <!-- Text watermark visualization -->
+      <rect x="480" y="170" width="80" height="20" rx="3" ry="3" fill="#F1F3F4" stroke="#DFE1E5" />
+      <text x="520" y="185" style="font-family: monospace; font-size: 10px; fill: #333; text-anchor: middle;">This is an example</text>
+      <rect x="488" y="170" width="3" height="20" fill="#EA4335" opacity="0.5" class="watermark-animation" />
+      <rect x="512" y="170" width="3" height="20" fill="#EA4335" opacity="0.5" class="watermark-animation" style="animation-delay: 0.5s" />
+      <rect x="536" y="170" width="3" height="20" fill="#EA4335" opacity="0.5" class="watermark-animation" style="animation-delay: 1s" />
+    </g>
+    
+    <g>
+      <!-- Watermarked Image -->
+      <rect x="460" y="240" width="120" height="80" rx="10" ry="10" class="resource" filter="url(#shadow)" />
+      <text x="520" y="270" class="text">Image Resource</text>
+      <text x="520" y="290" class="text" style="font-size: 10px;">Watermarked</text>
+      
+      <!-- Image watermark visualization -->
+      <rect x="480" y="330" width="80" height="60" rx="5" ry="5" fill="#F1F3F4" stroke="#DFE1E5" />
+      <rect x="490" y="340" width="60" height="40" fill="#4285F4" />
+      <rect x="500" y="350" width="5" height="5" fill="#EA4335" class="watermark-animation" />
+      <rect x="520" y="360" width="5" height="5" fill="#EA4335" class="watermark-animation" style="animation-delay: 0.3s" />
+      <rect x="535" y="345" width="5" height="5" fill="#EA4335" class="watermark-animation" style="animation-delay: 0.6s" />
+      <rect x="505" y="370" width="5" height="5" fill="#EA4335" class="watermark-animation" style="animation-delay: 0.9s" />
+    </g>
+    
+    <g>
+      <!-- Watermarked AI Model -->
+      <rect x="460" y="400" width="120" height="80" rx="10" ry="10" class="resource" filter="url(#shadow)" />
+      <text x="520" y="430" class="text">AI Model</text>
+      <text x="520" y="450" class="text" style="font-size: 10px;">Watermarked</text>
+      
+      <!-- AI model watermark visualization -->
+      <g transform="translate(520, 500)">
+        <rect x="-40" y="-30" width="80" height="60" rx="5" ry="5" fill="#F1F3F4" stroke="#DFE1E5" />
+        <text x="0" y="-15" style="font-family: Arial; font-size: 10px; fill: #333; text-anchor: middle;">Model Output</text>
+        <path d="M-30,0 L30,0" stroke="#4285F4" stroke-width="2" />
+        <path d="M-30,15 L30,15" stroke="#34A853" stroke-width="2" />
+        <path d="M-20,-5 L-20,20 M0,-5 L0,20 M20,-5 L20,20" stroke="#EA4335" stroke-width="1" stroke-dasharray="2,2" class="watermark-animation" />
+      </g>
+    </g>
+    
+    <!-- Watermarking Methods List -->
+    <g transform="translate(590, 80)">
+      <rect x="0" y="0" width="200" height="400" rx="10" ry="10" fill="#F1F3F4" stroke="#DFE1E5" stroke-width="2" filter="url(#shadow)" />
+      <text x="100" y="30" style="font-family: Arial; font-size: 16px; font-weight: bold; fill: #333; text-anchor: middle;">Watermarking Techniques</text>
+      
+      <text x="20" y="60" class="method-item" style="font-weight: bold; fill: #4285F4;">Text Watermarking:</text>
+      <text x="30" y="80" class="method-item">• Unicode Space Characters</text>
+      <text x="30" y="100" class="method-item">• Punctuation Variations</text>
+      <text x="30" y="120" class="method-item">• Line Break Patterns</text>
+      <text x="30" y="140" class="method-item">• Synonym Substitution</text>
+      
+      <text x="20" y="170" class="method-item" style="font-weight: bold; fill: #4285F4;">Image Watermarking:</text>
+      <text x="30" y="190" class="method-item">• LSB Encoding</text>
+      <text x="30" y="210" class="method-item">• DCT Domain Methods</text>
+      <text x="30" y="230" class="method-item">• DWT Domain Methods</text>
+      <text x="30" y="250" class="method-item">• Feature-based Approach</text>
+      
+      <text x="20" y="280" class="method-item" style="font-weight: bold; fill: #4285F4;">AI Model Watermarking:</text>
+      <text x="30" y="300" class="method-item">• White-box Methods:</text>
+      <text x="40" y="320" class="method-item">- Weight Perturbation</text>
+      <text x="40" y="340" class="method-item">- Parameter Encoding</text>
+      <text x="30" y="360" class="method-item">• Black-box Methods:</text>
+      <text x="40" y="380" class="method-item">- Output Distribution</text>
+      <text x="40" y="400" class="method-item">- Backdoor Triggers</text>
+    </g>
+  </g>
+</svg>
