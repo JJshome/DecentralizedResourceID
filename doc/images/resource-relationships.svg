@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <defs>
+    <!-- Gradient definitions -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8f9fa" />
+      <stop offset="100%" stop-color="#e9ecef" />
+    </linearGradient>
+    
+    <!-- Resource node gradients -->
+    <linearGradient id="datasetGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4361ee" />
+      <stop offset="100%" stop-color="#3a0ca3" />
+    </linearGradient>
+    <linearGradient id="modelGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7209b7" />
+      <stop offset="100%" stop-color="#560bad" />
+    </linearGradient>
+    <linearGradient id="imageGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f72585" />
+      <stop offset="100%" stop-color="#b5179e" />
+    </linearGradient>
+    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4cc9f0" />
+      <stop offset="100%" stop-color="#4895ef" />
+    </linearGradient>
+    <linearGradient id="webpageGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff9e00" />
+      <stop offset="100%" stop-color="#ff7a00" />
+    </linearGradient>
+    
+    <!-- Filter for shadow effect -->
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="3" dy="3" stdDeviation="5" flood-opacity="0.3" />
+    </filter>
+    
+    <!-- Arrow marker for relationship lines -->
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#6c757d" />
+    </marker>
+    
+    <!-- Animation definitions -->
+    <g id="pulse">
+      <animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite" />
+    </g>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="url(#bgGradient)" />
+  
+  <!-- Title -->
+  <text x="400" y="50" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#212529" text-anchor="middle">
+    Digital Resource Relationships
+  </text>
+  
+  <!-- Resource Nodes -->
+  <g>
+    <!-- Dataset Node -->
+    <g transform="translate(400, 150)">
+      <circle cx="0" cy="0" r="50" fill="url(#datasetGradient)" filter="url(#shadow)" />
+      <text x="0" y="0" font-family="Arial, sans-serif" font-size="16" fill="white" text-anchor="middle" dominant-baseline="middle">Dataset</text>
+      <text x="0" y="20" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle" dominant-baseline="middle">DID:asset:123</text>
+      <use xlink:href="#pulse" />
+    </g>
+    
+    <!-- AI Model Node -->
+    <g transform="translate(400, 300)">
+      <circle cx="0" cy="0" r="50" fill="url(#modelGradient)" filter="url(#shadow)" />
+      <text x="0" y="0" font-family="Arial, sans-serif" font-size="16" fill="white" text-anchor="middle" dominant-baseline="middle">AI Model</text>
+      <text x="0" y="20" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle" dominant-baseline="middle">DID:asset:456</text>
+    </g>
+    
+    <!-- Derived AI Model Node -->
+    <g transform="translate(600, 300)">
+      <circle cx="0" cy="0" r="50" fill="url(#modelGradient)" filter="url(#shadow)" />
+      <text x="0" y="0" font-family="Arial, sans-serif" font-size="16" fill="white" text-anchor="middle" dominant-baseline="middle">Derived</text>
+      <text x="0" y="20" font-family="Arial, sans-serif" font-size="16" fill="white" text-anchor="middle" dominant-baseline="middle">AI Model</text>
+      <text x="0" y="40" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle" dominant-baseline="middle">DID:asset:789</text>
+    </g>
+    
+    <!-- Image Node -->
+    <g transform="translate(200, 400)">
+      <circle cx="0" cy="0" r="50" fill="url(#imageGradient)" filter="url(#shadow)" />
+      <text x="0" y="0" font-family="Arial, sans-serif" font-size="16" fill="white" text-anchor="middle" dominant-baseline="middle">Image</text>
+      <text x="0" y="20" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle" dominant-baseline="middle">DID:asset:234</text>
+    </g>
+    
+    <!-- Text Node -->
+    <g transform="translate(400, 450)">
+      <circle cx="0" cy="0" r="50" fill="url(#textGradient)" filter="url(#shadow)" />
+      <text x="0" y="0" font-family="Arial, sans-serif" font-size="16" fill="white" text-anchor="middle" dominant-baseline="middle">Text</text>
+      <text x="0" y="20" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle" dominant-baseline="middle">DID:asset:567</text>
+    </g>
+    
+    <!-- Webpage Node -->
+    <g transform="translate(600, 450)">
+      <circle cx="0" cy="0" r="50" fill="url(#webpageGradient)" filter="url(#shadow)" />
+      <text x="0" y="0" font-family="Arial, sans-serif" font-size="16" fill="white" text-anchor="middle" dominant-baseline="middle">Webpage</text>
+      <text x="0" y="20" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle" dominant-baseline="middle">DID:asset:890</text>
+    </g>
+  </g>
+  
+  <!-- Relationship Lines -->
+  <g>
+    <!-- Dataset to AI Model (trained on) -->
+    <path d="M 400 200 L 400 250" stroke="#6c757d" stroke-width="3" marker-end="url(#arrowhead)" fill="none" />
+    <text x="420" y="230" font-family="Arial, sans-serif" font-size="14" fill="#212529">wasTrainedOn</text>
+    
+    <!-- AI Model to Derived Model (derived from) -->
+    <path d="M 450 300 L 550 300" stroke="#6c757d" stroke-width="3" marker-end="url(#arrowhead)" fill="none" />
+    <text x="500" y="290" font-family="Arial, sans-serif" font-size="14" fill="#212529">wasDerivedFrom</text>
+    
+    <!-- AI Model to Image (generated) -->
+    <path d="M 370 340 L 230 370" stroke="#6c757d" stroke-width="3" marker-end="url(#arrowhead)" fill="none" />
+    <text x="270" y="340" font-family="Arial, sans-serif" font-size="14" fill="#212529">generated</text>
+    
+    <!-- AI Model to Text (generated) -->
+    <path d="M 400 350 L 400 400" stroke="#6c757d" stroke-width="3" marker-end="url(#arrowhead)" fill="none" />
+    <text x="420" y="380" font-family="Arial, sans-serif" font-size="14" fill="#212529">generated</text>
+    
+    <!-- Image to Webpage (contains) -->
+    <path d="M 250 420 L 350 450 L 550 450" stroke="#6c757d" stroke-width="3" marker-end="url(#arrowhead)" fill="none" stroke-dasharray="5,5" />
+    <text x="350" y="430" font-family="Arial, sans-serif" font-size="14" fill="#212529">isPartOf</text>
+    
+    <!-- Text to Webpage (contains) -->
+    <path d="M 450 450 L 550 450" stroke="#6c757d" stroke-width="3" marker-end="url(#arrowhead)" fill="none" stroke-dasharray="5,5" />
+    <text x="500" y="440" font-family="Arial, sans-serif" font-size="14" fill="#212529">isPartOf</text>
+  </g>
+  
+  <!-- Legend -->
+  <g transform="translate(50, 100)">
+    <rect x="0" y="0" width="200" height="170" rx="10" ry="10" fill="white" filter="url(#shadow)" />
+    <text x="100" y="30" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#212529" text-anchor="middle">Relationship Types</text>
+    
+    <!-- Relationship types -->
+    <line x1="20" y1="60" x2="70" y2="60" stroke="#6c757d" stroke-width="3" marker-end="url(#arrowhead)" />
+    <text x="130" y="65" font-family="Arial, sans-serif" font-size="14" fill="#212529">Derivation</text>
+    
+    <line x1="20" y1="90" x2="70" y2="90" stroke="#6c757d" stroke-width="3" marker-end="url(#arrowhead)" />
+    <text x="130" y="95" font-family="Arial, sans-serif" font-size="14" fill="#212529">Generation</text>
+    
+    <line x1="20" y1="120" x2="70" y2="120" stroke="#6c757d" stroke-width="3" stroke-dasharray="5,5" marker-end="url(#arrowhead)" />
+    <text x="130" y="125" font-family="Arial, sans-serif" font-size="14" fill="#212529">Structural</text>
+    
+    <line x1="20" y1="150" x2="70" y2="150" stroke="#6c757d" stroke-width="3" />
+    <text x="130" y="155" font-family="Arial, sans-serif" font-size="14" fill="#212529">Dependency</text>
+  </g>
+  
+  <!-- Animated data flow along relationships -->
+  <g>
+    <circle cx="0" cy="0" r="5" fill="#f72585">
+      <animateMotion path="M 400 200 L 400 250" dur="2s" repeatCount="indefinite" />
+    </circle>
+    <circle cx="0" cy="0" r="5" fill="#4cc9f0">
+      <animateMotion path="M 450 300 L 550 300" dur="1.5s" repeatCount="indefinite" />
+    </circle>
+    <circle cx="0" cy="0" r="5" fill="#ff9e00">
+      <animateMotion path="M 370 340 L 230 370" dur="1.7s" repeatCount="indefinite" />
+    </circle>
+    <circle cx="0" cy="0" r="5" fill="#38b000">
+      <animateMotion path="M 400 350 L 400 400" dur="1.3s" repeatCount="indefinite" />
+    </circle>
+  </g>
+  
+  <!-- Cartoon Characters -->
+  <g transform="translate(700, 150)">
+    <circle cx="0" cy="0" r="30" fill="#ff9e00" />
+    <circle cx="-10" cy="-5" r="5" fill="white" />
+    <circle cx="10" cy="-5" r="5" fill="white" />
+    <circle cx="-10" cy="-5" r="2" fill="black" />
+    <circle cx="10" cy="-5" r="2" fill="black" />
+    <path d="M -10 10 Q 0 20 10 10" stroke="white" stroke-width="2" fill="none" />
+    
+    <!-- Animated movement -->
+    <animateTransform attributeName="transform" type="translate" from="700,150" to="700,170" dur="3s" repeatCount="indefinite" additive="sum" />
+    
+    <!-- Speech bubble -->
+    <path d="M -40 -40 L -80 -60 L -40 -70 Z" fill="#fff" />
+    <rect x="-180" y="-100" width="140" height="40" rx="10" ry="10" fill="#fff" />
+    <text x="-110" y="-75" font-family="Arial, sans-serif" font-size="10" fill="#212529" text-anchor="middle">Everything is connected with DID-based relationships!</text>
+  </g>
+</svg>
