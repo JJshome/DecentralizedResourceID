@@ -2,746 +2,599 @@
  * AI Model Context Manager
  * 
  * This module provides comprehensive context management for AI models, integrating
- * both static metadata (model cards) and dynamic interaction specifications (MCP).
- * It serves as a unified interface for managing the complete context information
- * needed for AI model identification, understanding, and interaction.
+ * both static metadata (model cards) and dynamic interaction information (Model Context Protocol).
  * 
- * Features:
- * - Integration of model cards for static model properties
- * - MCP-compatible interface specifications for dynamic interactions
- * - Comprehensive model context including basic info, training data, performance metrics
- * - Usage restrictions and ethical considerations
- * - Dynamic interaction context with host/client interfaces
+ * Key features:
+ * - Integration of model cards for static model characteristics
+ * - Model Context Protocol (MCP) support for dynamic model interactions
+ * - Comprehensive model metadata management
+ * - Runtime context handling and tool permission management
  */
 
 /**
- * Default schema for model cards, based on industry standards
+ * Model card schema fields aligned with industry standards
  */
-const DEFAULT_MODEL_CARD_SCHEMA = {
-  modelBasicInfo: {
-    name: { type: 'string', required: true },
-    description: { type: 'string', required: true },
-    modelType: { type: 'string', required: true },
-    architecture: { type: 'string', required: false },
-    version: { type: 'string', required: true },
-    releaseDate: { type: 'string', format: 'date', required: false },
-    license: { type: 'string', required: false },
-    repository: { type: 'string', format: 'url', required: false },
-    contactInfo: { type: 'string', required: false },
-    paperLink: { type: 'string', format: 'url', required: false },
-    citationInfo: { type: 'string', required: false },
-  },
-  trainingDataInfo: {
-    datasetName: { type: 'string', required: false },
-    datasetDid: { type: 'string', required: false },
-    datasetDescription: { type: 'string', required: false },
-    datasetSize: { type: 'string', required: false },
-    datasetDistribution: { type: 'object', required: false },
-    datasetLicense: { type: 'string', required: false },
-    dataExclusionCriteria: { type: 'string', required: false },
-    dataOptOutInfo: { type: 'string', required: false },
-    dataPrepProcessing: { type: 'string', required: false },
-    dataAnnotationProcess: { type: 'string', required: false }
-  },
-  performanceInfo: {
-    metrics: { type: 'array', items: { type: 'object' }, required: false },
-    evaluationDatasets: { type: 'array', items: { type: 'object' }, required: false },
-    quantitativeAnalyses: { type: 'array', items: { type: 'object' }, required: false },
-    performanceVisualization: { type: 'array', items: { type: 'string' }, required: false },
-    decisionThresholds: { type: 'object', required: false },
-    varianceAnalysis: { type: 'string', required: false },
-    confidenceIntervals: { type: 'object', required: false }
-  },
-  usageLimitations: {
-    intendedUses: { type: 'array', items: { type: 'string' }, required: false },
-    outOfScopeUses: { type: 'array', items: { type: 'string' }, required: false },
-    technicalLimitations: { type: 'array', items: { type: 'string' }, required: false },
-    safetyConsiderations: { type: 'array', items: { type: 'string' }, required: false },
-    minimumHardwareRequirements: { type: 'object', required: false }
-  },
-  ethicalConsiderations: {
-    biasAnalysis: { type: 'string', required: false },
-    biasMetrics: { type: 'array', items: { type: 'object' }, required: false },
-    fairnessAssessment: { type: 'string', required: false },
-    securityConsiderations: { type: 'string', required: false },
-    privacyConsiderations: { type: 'string', required: false },
-    socialImpact: { type: 'string', required: false },
-    environmentalImpact: { type: 'string', required: false }
-  },
-  caveatsAndRecommendations: {
-    knownIssues: { type: 'array', items: { type: 'string' }, required: false },
-    recommendedMitigations: { type: 'array', items: { type: 'string' }, required: false },
-    userFeedbackChannels: { type: 'string', required: false },
-    monitoringApproach: { type: 'string', required: false }
-  }
-};
-
-/**
- * Default schema for MCP host interfaces
- */
-const DEFAULT_MCP_HOST_INTERFACE_SCHEMA = {
-  interfaceVersion: { type: 'string', required: true },
-  supportedOperations: { type: 'array', items: { type: 'string' }, required: true },
-  authenticationMethods: { type: 'array', items: { type: 'string' }, required: false },
-  inputSchema: { type: 'object', required: true },
-  outputSchema: { type: 'object', required: true },
-  contextRequirements: { type: 'object', required: false },
-  errorSchemas: { type: 'object', required: false },
-  healthcheckEndpoint: { type: 'string', required: false }
-};
-
-/**
- * Default schema for MCP client interfaces
- */
-const DEFAULT_MCP_CLIENT_INTERFACE_SCHEMA = {
-  interfaceVersion: { type: 'string', required: true },
-  requiredOperations: { type: 'array', items: { type: 'string' }, required: true },
-  preferredAuthMethod: { type: 'string', required: false },
-  inputFormatters: { type: 'object', required: false },
-  outputHandlers: { type: 'object', required: false },
-  contextProviders: { type: 'array', items: { type: 'string' }, required: false },
-  errorHandlers: { type: 'object', required: false }
-};
-
-/**
- * Default schema for MCP primitives definition
- */
-const DEFAULT_MCP_PRIMITIVES_SCHEMA = {
-  tools: { type: 'array', items: { type: 'object' }, required: false },
-  resources: { type: 'array', items: { type: 'object' }, required: false },
-  prompts: { type: 'array', items: { type: 'object' }, required: false },
-  functions: { type: 'array', items: { type: 'object' }, required: false },
-  schemas: { type: 'object', required: false }
-};
-
-/**
- * Validates an object against a schema
- * @param {Object} obj - Object to validate
- * @param {Object} schema - Schema to validate against
- * @returns {Object} Validation result
- * @private
- */
-function _validateObject(obj, schema) {
-  const errors = [];
-  const validated = {};
+const MODEL_CARD_FIELDS = {
+  // Basic Information
+  MODEL_NAME: 'modelName',
+  MODEL_DESCRIPTION: 'modelDescription',
+  MODEL_TYPE: 'modelType',
+  MODEL_VERSION: 'modelVersion',
+  MODEL_ARCHITECTURE: 'modelArchitecture',
+  PARAMETERS: 'parameters',
+  MODEL_SIZE: 'modelSize',
   
-  for (const [field, config] of Object.entries(schema)) {
-    // Check required fields
-    if (config.required && (obj[field] === undefined || obj[field] === null)) {
-      errors.push(`Required field '${field}' is missing`);
-      continue;
-    }
-    
-    // Skip undefined optional fields
-    if (obj[field] === undefined) {
-      continue;
-    }
-    
-    // Type checking
-    if (config.type && typeof obj[field] !== config.type) {
-      if (!(config.type === 'array' && Array.isArray(obj[field]))) {
-        errors.push(`Field '${field}' should be of type ${config.type}`);
-        continue;
-      }
-    }
-    
-    // Format validation (basic)
-    if (config.format === 'url' && typeof obj[field] === 'string') {
-      try {
-        new URL(obj[field]);
-      } catch (e) {
-        errors.push(`Field '${field}' should be a valid URL`);
-        continue;
-      }
-    }
-    
-    if (config.format === 'date' && typeof obj[field] === 'string') {
-      const date = new Date(obj[field]);
-      if (isNaN(date.getTime())) {
-        errors.push(`Field '${field}' should be a valid date`);
-        continue;
-      }
-    }
-    
-    // Array items validation
-    if (config.type === 'array' && Array.isArray(obj[field]) && config.items) {
-      const itemType = config.items.type;
-      for (let i = 0; i < obj[field].length; i++) {
-        const item = obj[field][i];
-        if (typeof item !== itemType) {
-          errors.push(`Item ${i} in field '${field}' should be of type ${itemType}`);
-        }
-      }
-    }
-    
-    // Add to validated object
-    validated[field] = obj[field];
-  }
+  // Training Data Information
+  TRAINING_DATASET: 'trainingDataset',
+  TRAINING_DATASET_REFERENCES: 'trainingDatasetReferences',
+  DATA_CHARACTERISTICS: 'dataCharacteristics',
+  DATA_PREPROCESSING: 'dataPreprocessing',
+  DATA_SPLITS: 'dataSplits',
   
-  return { validated, errors, isValid: errors.length === 0 };
+  // Performance Information
+  EVALUATION_METRICS: 'evaluationMetrics',
+  BENCHMARK_RESULTS: 'benchmarkResults',
+  CONFIDENCE_INTERVALS: 'confidenceIntervals',
+  PERFORMANCE_TRADEOFFS: 'performanceTradeoffs',
+  
+  // Usage Information
+  INTENDED_USE: 'intendedUse',
+  USAGE_EXAMPLES: 'usageExamples',
+  LIMITATIONS: 'limitations',
+  ETHICAL_CONSIDERATIONS: 'ethicalConsiderations',
+  SAFETY_MECHANISMS: 'safetyMechanisms',
+  
+  // Provenance Information
+  DEVELOPER_INFO: 'developerInfo',
+  DEVELOPER_CONTACT: 'developerContact',
+  CITATION_INFO: 'citationInfo',
+  LICENSE_INFO: 'licenseInfo',
+  
+  // Technical Requirements
+  HARDWARE_REQUIREMENTS: 'hardwareRequirements',
+  SOFTWARE_DEPENDENCIES: 'softwareDependencies',
+  EXECUTION_ENVIRONMENT: 'executionEnvironment',
+  
+  // Bias and Fairness
+  BIAS_ANALYSIS: 'biasAnalysis',
+  FAIRNESS_ASSESSMENT: 'fairnessAssessment',
+  DEMOGRAPHIC_EVALUATION: 'demographicEvaluation',
+  
+  // Robustness and Security
+  ROBUSTNESS_EVALUATION: 'robustnessEvaluation',
+  ADVERSARIAL_TESTING: 'adversarialTesting',
+  SECURITY_CONSIDERATIONS: 'securityConsiderations'
+};
+
+/**
+ * Model Context Protocol (MCP) component types
+ */
+const MCP_COMPONENT_TYPES = {
+  HOST: 'host',
+  CLIENT: 'client',
+  SERVER: 'server',
+  TOOL: 'tool',
+  PRIMITIVE: 'primitive'
+};
+
+/**
+ * Model Context Protocol (MCP) permission levels
+ */
+const MCP_PERMISSION_LEVELS = {
+  NONE: 'none',
+  READ_ONLY: 'readOnly',
+  WRITE_ONLY: 'writeOnly',
+  READ_WRITE: 'readWrite',
+  EXECUTE: 'execute',
+  FULL: 'full'
+};
+
+/**
+ * Represents an MCP tool definition
+ */
+class MCPTool {
+  /**
+   * Create an MCP tool definition
+   * @param {string} id - Tool identifier
+   * @param {string} name - Human-readable tool name
+   * @param {string} description - Tool description
+   * @param {string} version - Tool version
+   * @param {Object} schema - JSON Schema definition of tool parameters
+   * @param {Object} permissions - Required permissions for the tool
+   */
+  constructor(id, name, description, version, schema, permissions = {}) {
+    this.id = id;
+    this.name = name;
+    this.description = description;
+    this.version = version;
+    this.schema = schema;
+    this.permissions = permissions;
+  }
+
+  /**
+   * Serialize the tool to JSON
+   * @returns {Object} JSON representation
+   */
+  toJSON() {
+    return {
+      id: this.id,
+      name: this.name,
+      description: this.description,
+      version: this.version,
+      schema: this.schema,
+      permissions: this.permissions
+    };
+  }
 }
 
 /**
- * Class for managing AI model cards (static metadata)
+ * Represents an MCP primitive definition
+ */
+class MCPPrimitive {
+  /**
+   * Create an MCP primitive definition
+   * @param {string} id - Primitive identifier
+   * @param {string} name - Human-readable primitive name
+   * @param {string} description - Primitive description
+   * @param {string} type - Primitive data type
+   * @param {Object} schema - JSON Schema definition of primitive
+   */
+  constructor(id, name, description, type, schema) {
+    this.id = id;
+    this.name = name;
+    this.description = description;
+    this.type = type;
+    this.schema = schema;
+  }
+
+  /**
+   * Serialize the primitive to JSON
+   * @returns {Object} JSON representation
+   */
+  toJSON() {
+    return {
+      id: this.id,
+      name: this.name,
+      description: this.description,
+      type: this.type,
+      schema: this.schema
+    };
+  }
+}
+
+/**
+ * Represents a comprehensive model card
  */
 class ModelCard {
   /**
    * Create a model card
    * @param {Object} data - Model card data
-   * @param {Object} schema - Optional custom schema
    */
-  constructor(data = {}, schema = DEFAULT_MODEL_CARD_SCHEMA) {
-    this.schema = schema;
-    this.data = this._initializeData(data);
-    this.errors = {};
-    this.validate();
-  }
-
-  /**
-   * Initialize data with schema structure
-   * @param {Object} data - Initial data
-   * @returns {Object} Structured data
-   * @private
-   */
-  _initializeData(data) {
-    const result = {};
-    
-    for (const section of Object.keys(this.schema)) {
-      result[section] = data[section] || {};
-    }
-    
-    return result;
-  }
-
-  /**
-   * Validate the model card data against the schema
-   * @returns {boolean} True if valid
-   */
-  validate() {
-    this.errors = {};
-    let isValid = true;
-    
-    for (const [section, sectionSchema] of Object.entries(this.schema)) {
-      const { validated, errors, isValid: sectionValid } = _validateObject(
-        this.data[section] || {},
-        sectionSchema
-      );
+  constructor(data = {}) {
+    // Initialize with provided data or empty objects/arrays
+    this.data = {
+      // Basic information (required)
+      [MODEL_CARD_FIELDS.MODEL_NAME]: data[MODEL_CARD_FIELDS.MODEL_NAME] || '',
+      [MODEL_CARD_FIELDS.MODEL_DESCRIPTION]: data[MODEL_CARD_FIELDS.MODEL_DESCRIPTION] || '',
+      [MODEL_CARD_FIELDS.MODEL_TYPE]: data[MODEL_CARD_FIELDS.MODEL_TYPE] || '',
+      [MODEL_CARD_FIELDS.MODEL_VERSION]: data[MODEL_CARD_FIELDS.MODEL_VERSION] || '',
       
-      if (!sectionValid) {
-        this.errors[section] = errors;
-        isValid = false;
-      }
-      
-      // Update with validated data
-      this.data[section] = validated;
-    }
-    
-    return isValid;
-  }
-
-  /**
-   * Update a section of the model card
-   * @param {string} section - Section name
-   * @param {Object} data - New section data
-   * @returns {boolean} True if update was valid
-   */
-  updateSection(section, data) {
-    if (!this.schema[section]) {
-      throw new Error(`Invalid section: ${section}`);
-    }
-    
-    const { validated, errors, isValid } = _validateObject(
-      data,
-      this.schema[section]
-    );
-    
-    if (!isValid) {
-      this.errors[section] = errors;
-      return false;
-    }
-    
-    this.data[section] = {
-      ...this.data[section],
-      ...validated
+      // Initialize all other fields with provided data or empty values
+      ...Object.values(MODEL_CARD_FIELDS).reduce((acc, field) => {
+        if (!(field in acc)) { // Skip fields already added above
+          acc[field] = data[field] || (typeof data[field] === 'object' ? {} : '');
+        }
+        return acc;
+      }, {})
     };
-    
-    return true;
   }
 
   /**
-   * Get model card data
-   * @returns {Object} Model card data
+   * Update model card fields
+   * @param {Object} updates - Fields to update
+   * @returns {ModelCard} This model card instance
    */
-  getData() {
-    return { ...this.data };
+  update(updates) {
+    Object.entries(updates).forEach(([key, value]) => {
+      // Only update fields that are part of the schema
+      if (Object.values(MODEL_CARD_FIELDS).includes(key)) {
+        this.data[key] = value;
+      }
+    });
+    return this;
   }
 
   /**
-   * Convert to JSON-LD
+   * Get a specific field value
+   * @param {string} field - Field name from MODEL_CARD_FIELDS
+   * @returns {*} Field value
+   */
+  get(field) {
+    return this.data[field];
+  }
+
+  /**
+   * Set a specific field value
+   * @param {string} field - Field name from MODEL_CARD_FIELDS
+   * @param {*} value - Field value
+   * @returns {ModelCard} This model card instance
+   */
+  set(field, value) {
+    if (Object.values(MODEL_CARD_FIELDS).includes(field)) {
+      this.data[field] = value;
+    }
+    return this;
+  }
+
+  /**
+   * Check if the model card has all required fields
+   * @returns {boolean} True if all required fields are present
+   */
+  isValid() {
+    const requiredFields = [
+      MODEL_CARD_FIELDS.MODEL_NAME,
+      MODEL_CARD_FIELDS.MODEL_DESCRIPTION,
+      MODEL_CARD_FIELDS.MODEL_TYPE,
+      MODEL_CARD_FIELDS.MODEL_VERSION
+    ];
+    
+    return requiredFields.every(field => 
+      this.data[field] !== undefined && 
+      this.data[field] !== null && 
+      this.data[field] !== ''
+    );
+  }
+
+  /**
+   * Convert to JSON-LD format with schema.org compatibility
    * @returns {Object} JSON-LD representation
    */
   toJSONLD() {
-    const jsonld = {
-      '@context': {
-        'mc': 'https://schema.org/AIModel#',
-        'xsd': 'http://www.w3.org/2001/XMLSchema#'
-      },
-      '@type': 'mc:ModelCard'
+    // Map model card fields to schema.org vocabulary
+    return {
+      '@context': 'https://schema.org/',
+      '@type': 'SoftwareApplication',
+      'name': this.data[MODEL_CARD_FIELDS.MODEL_NAME],
+      'description': this.data[MODEL_CARD_FIELDS.MODEL_DESCRIPTION],
+      'applicationCategory': 'AI Model',
+      'applicationSubCategory': this.data[MODEL_CARD_FIELDS.MODEL_TYPE],
+      'softwareVersion': this.data[MODEL_CARD_FIELDS.MODEL_VERSION],
+      'author': this.data[MODEL_CARD_FIELDS.DEVELOPER_INFO],
+      'license': this.data[MODEL_CARD_FIELDS.LICENSE_INFO],
+      'citation': this.data[MODEL_CARD_FIELDS.CITATION_INFO],
+      // Add additional schema.org mappings as appropriate
+      'additionalProperty': Object.entries(this.data)
+        .filter(([key]) => !['modelName', 'modelDescription', 'modelType', 'modelVersion', 
+                            'developerInfo', 'licenseInfo', 'citationInfo'].includes(key))
+        .map(([key, value]) => ({
+          '@type': 'PropertyValue',
+          'name': key,
+          'value': typeof value === 'object' ? JSON.stringify(value) : value
+        }))
     };
-    
-    // Map data to JSON-LD format
-    for (const [section, sectionData] of Object.entries(this.data)) {
-      for (const [key, value] of Object.entries(sectionData)) {
-        jsonld[`mc:${section}_${key}`] = value;
-      }
-    }
-    
-    return jsonld;
+  }
+
+  /**
+   * Serialize the model card to JSON
+   * @returns {Object} JSON representation
+   */
+  toJSON() {
+    return { ...this.data };
   }
 }
 
 /**
- * Class for managing MCP interfaces (dynamic interaction specifications)
+ * Model Context Protocol interface definition
  */
 class MCPInterface {
   /**
-   * Create an MCP interface
-   * @param {Object} hostInterface - Host interface specification
-   * @param {Object} clientInterface - Client interface specification
-   * @param {Object} primitives - MCP primitives definition
-   * @param {Object} options - Additional options
+   * Create a Model Context Protocol interface
+   * @param {string} type - Interface type (from MCP_COMPONENT_TYPES)
+   * @param {Object} schema - Interface JSON schema
    */
-  constructor(hostInterface = {}, clientInterface = {}, primitives = {}, options = {}) {
-    this.hostInterfaceSchema = options.hostInterfaceSchema || DEFAULT_MCP_HOST_INTERFACE_SCHEMA;
-    this.clientInterfaceSchema = options.clientInterfaceSchema || DEFAULT_MCP_CLIENT_INTERFACE_SCHEMA;
-    this.primitivesSchema = options.primitivesSchema || DEFAULT_MCP_PRIMITIVES_SCHEMA;
-    
-    this.hostInterface = hostInterface;
-    this.clientInterface = clientInterface;
-    this.primitives = primitives;
-    this.externalToolPermissions = options.externalToolPermissions || {};
-    
-    this.errors = {};
-    this.validate();
+  constructor(type, schema = {}) {
+    this.type = type;
+    this.schema = schema;
+    this.tools = new Map();
+    this.primitives = new Map();
   }
 
   /**
-   * Validate the MCP interface specifications
-   * @returns {boolean} True if valid
+   * Add a tool to the interface
+   * @param {MCPTool} tool - Tool to add
+   * @returns {MCPInterface} This interface instance
    */
-  validate() {
-    this.errors = {};
-    let isValid = true;
-    
-    // Validate host interface
-    const hostValidation = _validateObject(
-      this.hostInterface,
-      this.hostInterfaceSchema
-    );
-    
-    if (!hostValidation.isValid) {
-      this.errors.hostInterface = hostValidation.errors;
-      isValid = false;
-    }
-    
-    // Validate client interface
-    const clientValidation = _validateObject(
-      this.clientInterface,
-      this.clientInterfaceSchema
-    );
-    
-    if (!clientValidation.isValid) {
-      this.errors.clientInterface = clientValidation.errors;
-      isValid = false;
-    }
-    
-    // Validate primitives
-    const primitivesValidation = _validateObject(
-      this.primitives,
-      this.primitivesSchema
-    );
-    
-    if (!primitivesValidation.isValid) {
-      this.errors.primitives = primitivesValidation.errors;
-      isValid = false;
-    }
-    
-    return isValid;
+  addTool(tool) {
+    this.tools.set(tool.id, tool);
+    return this;
   }
 
   /**
-   * Update host interface
-   * @param {Object} hostInterface - New host interface data
-   * @returns {boolean} True if update was valid
+   * Remove a tool from the interface
+   * @param {string} toolId - ID of tool to remove
+   * @returns {boolean} True if the tool was removed
    */
-  updateHostInterface(hostInterface) {
-    const { validated, errors, isValid } = _validateObject(
-      hostInterface,
-      this.hostInterfaceSchema
-    );
-    
-    if (!isValid) {
-      this.errors.hostInterface = errors;
-      return false;
-    }
-    
-    this.hostInterface = {
-      ...this.hostInterface,
-      ...validated
-    };
-    
-    return true;
+  removeTool(toolId) {
+    return this.tools.delete(toolId);
   }
 
   /**
-   * Update client interface
-   * @param {Object} clientInterface - New client interface data
-   * @returns {boolean} True if update was valid
+   * Get a tool by ID
+   * @param {string} toolId - Tool ID
+   * @returns {MCPTool|undefined} The tool or undefined if not found
    */
-  updateClientInterface(clientInterface) {
-    const { validated, errors, isValid } = _validateObject(
-      clientInterface,
-      this.clientInterfaceSchema
-    );
-    
-    if (!isValid) {
-      this.errors.clientInterface = errors;
-      return false;
-    }
-    
-    this.clientInterface = {
-      ...this.clientInterface,
-      ...validated
-    };
-    
-    return true;
+  getTool(toolId) {
+    return this.tools.get(toolId);
   }
 
   /**
-   * Update primitives
-   * @param {Object} primitives - New primitives data
-   * @returns {boolean} True if update was valid
+   * Add a primitive to the interface
+   * @param {MCPPrimitive} primitive - Primitive to add
+   * @returns {MCPInterface} This interface instance
    */
-  updatePrimitives(primitives) {
-    const { validated, errors, isValid } = _validateObject(
-      primitives,
-      this.primitivesSchema
-    );
-    
-    if (!isValid) {
-      this.errors.primitives = errors;
-      return false;
-    }
-    
-    this.primitives = {
-      ...this.primitives,
-      ...validated
-    };
-    
-    return true;
+  addPrimitive(primitive) {
+    this.primitives.set(primitive.id, primitive);
+    return this;
   }
 
   /**
-   * Update external tool permissions
-   * @param {Object} permissions - Tool permissions
+   * Remove a primitive from the interface
+   * @param {string} primitiveId - ID of primitive to remove
+   * @returns {boolean} True if the primitive was removed
    */
-  updateExternalToolPermissions(permissions) {
-    this.externalToolPermissions = {
-      ...this.externalToolPermissions,
-      ...permissions
-    };
+  removePrimitive(primitiveId) {
+    return this.primitives.delete(primitiveId);
   }
 
   /**
-   * Get the complete MCP interface
-   * @returns {Object} Complete interface
+   * Get a primitive by ID
+   * @param {string} primitiveId - Primitive ID
+   * @returns {MCPPrimitive|undefined} The primitive or undefined if not found
    */
-  getInterface() {
+  getPrimitive(primitiveId) {
+    return this.primitives.get(primitiveId);
+  }
+
+  /**
+   * Serialize the interface to JSON
+   * @returns {Object} JSON representation
+   */
+  toJSON() {
     return {
-      hostInterface: { ...this.hostInterface },
-      clientInterface: { ...this.clientInterface },
-      primitives: { ...this.primitives },
-      externalToolPermissions: { ...this.externalToolPermissions }
+      type: this.type,
+      schema: this.schema,
+      tools: Array.from(this.tools.values()).map(tool => tool.toJSON()),
+      primitives: Array.from(this.primitives.values()).map(primitive => primitive.toJSON())
     };
   }
 }
 
 /**
- * Main class for managing AI model context information
+ * Main class for AI model context management
  */
 class AIModelContextManager {
   /**
-   * Create an AI model context manager
+   * Initialize the AI model context manager
    * @param {Object} options - Configuration options
    */
   constructor(options = {}) {
     this.options = options;
-    this.modelCard = new ModelCard(options.modelCardData || {});
-    this.mcpInterface = new MCPInterface(
-      options.hostInterface || {},
-      options.clientInterface || {},
-      options.primitives || {},
-      options.mcpOptions || {}
-    );
+    this.modelCard = new ModelCard(options.modelCard || {});
+    this.hostInterface = new MCPInterface(MCP_COMPONENT_TYPES.HOST, options.hostSchema || {});
+    this.clientInterface = new MCPInterface(MCP_COMPONENT_TYPES.CLIENT, options.clientSchema || {});
+    this.runtimeContext = new Map(); // For storing dynamic runtime context
+    this.permissionRegistry = new Map(); // For managing tool permissions
+  }
+
+  /**
+   * Update the model card
+   * @param {Object} updates - Model card updates
+   * @returns {AIModelContextManager} This manager instance
+   */
+  updateModelCard(updates) {
+    this.modelCard.update(updates);
+    return this;
+  }
+
+  /**
+   * Get the complete model card
+   * @returns {ModelCard} The model card
+   */
+  getModelCard() {
+    return this.modelCard;
+  }
+
+  /**
+   * Add a tool to the host interface
+   * @param {MCPTool} tool - Tool to add
+   * @returns {AIModelContextManager} This manager instance
+   */
+  addHostTool(tool) {
+    this.hostInterface.addTool(tool);
+    return this;
+  }
+
+  /**
+   * Add a tool to the client interface
+   * @param {MCPTool} tool - Tool to add
+   * @returns {AIModelContextManager} This manager instance
+   */
+  addClientTool(tool) {
+    this.clientInterface.addTool(tool);
+    return this;
+  }
+
+  /**
+   * Register a permission requirement for a tool
+   * @param {string} toolId - Tool ID
+   * @param {string} resourceType - Type of resource requiring permission
+   * @param {string} permissionLevel - Permission level (from MCP_PERMISSION_LEVELS)
+   * @returns {AIModelContextManager} This manager instance
+   */
+  registerPermission(toolId, resourceType, permissionLevel) {
+    if (!Object.values(MCP_PERMISSION_LEVELS).includes(permissionLevel)) {
+      throw new Error(`Invalid permission level: ${permissionLevel}`);
+    }
     
-    this.modelDid = options.modelDid || null;
-    this.provenance = options.provenance || {};
+    const key = `${toolId}:${resourceType}`;
+    this.permissionRegistry.set(key, permissionLevel);
+    return this;
   }
 
   /**
-   * Get the complete model context
-   * @returns {Object} Combined context information
+   * Check if a tool has the required permission for a resource
+   * @param {string} toolId - Tool ID
+   * @param {string} resourceType - Type of resource
+   * @param {string} requiredPermission - Required permission level
+   * @returns {boolean} True if the tool has the required permission
    */
-  getCompleteContext() {
+  hasPermission(toolId, resourceType, requiredPermission) {
+    const key = `${toolId}:${resourceType}`;
+    const assignedPermission = this.permissionRegistry.get(key) || MCP_PERMISSION_LEVELS.NONE;
+    
+    // Permission hierarchy
+    const permissionRanks = {
+      [MCP_PERMISSION_LEVELS.NONE]: 0,
+      [MCP_PERMISSION_LEVELS.READ_ONLY]: 1,
+      [MCP_PERMISSION_LEVELS.WRITE_ONLY]: 1,
+      [MCP_PERMISSION_LEVELS.READ_WRITE]: 2,
+      [MCP_PERMISSION_LEVELS.EXECUTE]: 2,
+      [MCP_PERMISSION_LEVELS.FULL]: 3
+    };
+    
+    // Special cases for read/write permissions
+    if (requiredPermission === MCP_PERMISSION_LEVELS.READ_ONLY) {
+      return assignedPermission === MCP_PERMISSION_LEVELS.READ_ONLY ||
+             assignedPermission === MCP_PERMISSION_LEVELS.READ_WRITE ||
+             assignedPermission === MCP_PERMISSION_LEVELS.FULL;
+    }
+    
+    if (requiredPermission === MCP_PERMISSION_LEVELS.WRITE_ONLY) {
+      return assignedPermission === MCP_PERMISSION_LEVELS.WRITE_ONLY ||
+             assignedPermission === MCP_PERMISSION_LEVELS.READ_WRITE ||
+             assignedPermission === MCP_PERMISSION_LEVELS.FULL;
+    }
+    
+    // General case: compare permission ranks
+    return permissionRanks[assignedPermission] >= permissionRanks[requiredPermission];
+  }
+
+  /**
+   * Set a runtime context value
+   * @param {string} key - Context key
+   * @param {*} value - Context value
+   * @returns {AIModelContextManager} This manager instance
+   */
+  setRuntimeContext(key, value) {
+    this.runtimeContext.set(key, value);
+    return this;
+  }
+
+  /**
+   * Get a runtime context value
+   * @param {string} key - Context key
+   * @returns {*} Context value or undefined if not found
+   */
+  getRuntimeContext(key) {
+    return this.runtimeContext.get(key);
+  }
+
+  /**
+   * Create an MCP request context
+   * @param {string} toolId - Tool ID
+   * @param {Object} parameters - Tool parameters
+   * @param {Object} additionalContext - Additional context information
+   * @returns {Object} MCP request context
+   */
+  createRequestContext(toolId, parameters = {}, additionalContext = {}) {
+    const tool = this.hostInterface.getTool(toolId) || this.clientInterface.getTool(toolId);
+    
+    if (!tool) {
+      throw new Error(`Tool not found: ${toolId}`);
+    }
+    
     return {
-      modelDid: this.modelDid,
-      staticContext: this.modelCard.getData(),
-      dynamicContext: this.mcpInterface.getInterface(),
-      provenance: this.provenance
+      tool: {
+        id: tool.id,
+        name: tool.name,
+        version: tool.version
+      },
+      parameters,
+      context: {
+        timestamp: new Date().toISOString(),
+        modelName: this.modelCard.get(MODEL_CARD_FIELDS.MODEL_NAME),
+        modelVersion: this.modelCard.get(MODEL_CARD_FIELDS.MODEL_VERSION),
+        ...additionalContext,
+        ...Object.fromEntries(this.runtimeContext)
+      }
     };
   }
 
   /**
-   * Update model card information
-   * @param {string} section - Section to update
-   * @param {Object} data - New section data
-   * @returns {boolean} True if update was successful
+   * Generate a complete integrated context representation
+   * @returns {Object} Integrated context information
    */
-  updateModelCard(section, data) {
-    return this.modelCard.updateSection(section, data);
-  }
-
-  /**
-   * Update MCP host interface
-   * @param {Object} hostInterface - New host interface data
-   * @returns {boolean} True if update was successful
-   */
-  updateHostInterface(hostInterface) {
-    return this.mcpInterface.updateHostInterface(hostInterface);
-  }
-
-  /**
-   * Update MCP client interface
-   * @param {Object} clientInterface - New client interface data
-   * @returns {boolean} True if update was successful
-   */
-  updateClientInterface(clientInterface) {
-    return this.mcpInterface.updateClientInterface(clientInterface);
-  }
-
-  /**
-   * Update MCP primitives
-   * @param {Object} primitives - New primitives data
-   * @returns {boolean} True if update was successful
-   */
-  updatePrimitives(primitives) {
-    return this.mcpInterface.updatePrimitives(primitives);
-  }
-
-  /**
-   * Update external tool permissions
-   * @param {Object} permissions - Tool permissions
-   */
-  updateExternalToolPermissions(permissions) {
-    this.mcpInterface.updateExternalToolPermissions(permissions);
-  }
-
-  /**
-   * Update model provenance information
-   * @param {Object} provenance - Provenance data
-   */
-  updateProvenance(provenance) {
-    this.provenance = {
-      ...this.provenance,
-      ...provenance
+  generateIntegratedContext() {
+    // Combine model card data with MCP interfaces
+    return {
+      modelCard: this.modelCard.toJSON(),
+      interfaces: {
+        host: this.hostInterface.toJSON(),
+        client: this.clientInterface.toJSON()
+      },
+      permissions: Array.from(this.permissionRegistry.entries()).map(([key, level]) => {
+        const [toolId, resourceType] = key.split(':');
+        return {
+          toolId,
+          resourceType,
+          permissionLevel: level
+        };
+      })
     };
   }
 
   /**
-   * Export the model context in JSON-LD format
+   * Generate a JSON-LD representation of the context
    * @returns {Object} JSON-LD representation
    */
   toJSONLD() {
     const modelCardLD = this.modelCard.toJSONLD();
     
-    // Create JSON-LD representation
-    const jsonld = {
-      '@context': {
-        ...modelCardLD['@context'],
-        'mcp': 'https://schema.org/ModelContextProtocol#',
-        'prov': 'http://www.w3.org/ns/prov#'
-      },
-      '@id': this.modelDid,
-      '@type': ['mc:ModelCard', 'mcp:ModelInterface'],
-      ...modelCardLD
-    };
-    
-    // Add MCP interface information
-    const mcpInterface = this.mcpInterface.getInterface();
-    jsonld['mcp:hostInterface'] = mcpInterface.hostInterface;
-    jsonld['mcp:clientInterface'] = mcpInterface.clientInterface;
-    jsonld['mcp:primitives'] = mcpInterface.primitives;
-    jsonld['mcp:externalToolPermissions'] = mcpInterface.externalToolPermissions;
-    
-    // Add provenance information
-    if (Object.keys(this.provenance).length > 0) {
-      jsonld['prov:wasGeneratedBy'] = this.provenance.generator;
-      jsonld['prov:wasAttributedTo'] = this.provenance.attributedTo;
-      jsonld['prov:wasDerivedFrom'] = this.provenance.derivedFrom;
-    }
-    
-    return jsonld;
-  }
-
-  /**
-   * Export the model context as a DID service endpoint definition
-   * @returns {Object} Service endpoint definition
-   */
-  toDIDServiceEndpoint() {
-    return {
-      id: `${this.modelDid}#model-context`,
-      type: 'AIModelContextService',
-      serviceEndpoint: {
-        modelCardEndpoint: `${this.modelDid}/model-card`,
-        mcpHostInterfaceEndpoint: `${this.modelDid}/mcp-host`,
-        mcpClientInterfaceEndpoint: `${this.modelDid}/mcp-client`,
-        mcpPrimitivesEndpoint: `${this.modelDid}/mcp-primitives`
+    // Add MCP-specific properties
+    modelCardLD.additionalProperty.push({
+      '@type': 'PropertyValue',
+      'name': 'modelContextProtocol',
+      'value': {
+        'hostInterface': this.hostInterface.toJSON(),
+        'clientInterface': this.clientInterface.toJSON()
       }
-    };
-  }
-
-  /**
-   * Validate the complete model context
-   * @returns {Object} Validation results with errors
-   */
-  validate() {
-    const modelCardValid = this.modelCard.validate();
-    const mcpInterfaceValid = this.mcpInterface.validate();
-    
-    return {
-      isValid: modelCardValid && mcpInterfaceValid,
-      errors: {
-        modelCard: this.modelCard.errors,
-        mcpInterface: this.mcpInterface.errors
-      }
-    };
-  }
-
-  /**
-   * Create an execution context for model interaction
-   * @param {Object} input - Input data for the model
-   * @param {Object} options - Execution options
-   * @returns {Object} Execution context
-   */
-  createExecutionContext(input, options = {}) {
-    // This would create a runtime context for model execution
-    // based on the static metadata and dynamic interface
-    return {
-      input,
-      modelDid: this.modelDid,
-      hostInterface: this.mcpInterface.hostInterface,
-      allowedTools: this._getAllowedTools(options),
-      contextVariables: options.contextVariables || {},
-      executionId: options.executionId || crypto.randomUUID(),
-      timestamp: new Date().toISOString()
-    };
-  }
-
-  /**
-   * Get allowed tools based on permissions
-   * @param {Object} options - Execution options
-   * @returns {Array} Allowed tools
-   * @private
-   */
-  _getAllowedTools(options = {}) {
-    const requestedTools = options.requestedTools || [];
-    const allTools = this.mcpInterface.primitives.tools || [];
-    const permissions = this.mcpInterface.externalToolPermissions;
-    
-    // Filter tools based on permissions
-    return allTools.filter(tool => {
-      // If tool is explicitly requested
-      if (requestedTools.includes(tool.name)) {
-        // Check if tool has permissions
-        if (permissions[tool.name] === 'allowed') {
-          return true;
-        }
-        if (permissions[tool.name] === 'requires_approval' && options.approvedTools?.includes(tool.name)) {
-          return true;
-        }
-        return false;
-      }
-      
-      // Include default tools
-      return permissions[tool.name] === 'default';
     });
+    
+    return modelCardLD;
   }
-}
 
-/**
- * Factory for creating model context managers for different model types
- */
-class AIModelContextManagerFactory {
   /**
-   * Create a context manager for a specific model type
-   * @param {string} modelType - Type of AI model
-   * @param {Object} options - Configuration options
-   * @returns {AIModelContextManager} Appropriate context manager
+   * Serialize to JSON
+   * @returns {Object} JSON representation
    */
-  static createContextManager(modelType, options = {}) {
-    switch (modelType.toLowerCase()) {
-      case 'language-model':
-        // Could extend with language model specific functionality
-        return new AIModelContextManager({
-          ...options,
-          modelCardData: {
-            ...options.modelCardData,
-            modelBasicInfo: {
-              ...options.modelCardData?.modelBasicInfo,
-              modelType: 'LanguageModel'
-            }
-          }
-        });
-      
-      case 'vision-model':
-        // Could extend with vision model specific functionality
-        return new AIModelContextManager({
-          ...options,
-          modelCardData: {
-            ...options.modelCardData,
-            modelBasicInfo: {
-              ...options.modelCardData?.modelBasicInfo,
-              modelType: 'VisionModel'
-            }
-          }
-        });
-      
-      case 'multimodal-model':
-        // Could extend with multimodal model specific functionality
-        return new AIModelContextManager({
-          ...options,
-          modelCardData: {
-            ...options.modelCardData,
-            modelBasicInfo: {
-              ...options.modelCardData?.modelBasicInfo,
-              modelType: 'MultimodalModel'
-            }
-          }
-        });
-      
-      default:
-        return new AIModelContextManager(options);
-    }
+  toJSON() {
+    return {
+      modelCard: this.modelCard.toJSON(),
+      hostInterface: this.hostInterface.toJSON(),
+      clientInterface: this.clientInterface.toJSON(),
+      permissions: Object.fromEntries(this.permissionRegistry),
+      // Runtime context is intentionally not serialized
+    };
   }
 }
 
 module.exports = {
   AIModelContextManager,
-  AIModelContextManagerFactory,
   ModelCard,
   MCPInterface,
-  DEFAULT_MODEL_CARD_SCHEMA,
-  DEFAULT_MCP_HOST_INTERFACE_SCHEMA,
-  DEFAULT_MCP_CLIENT_INTERFACE_SCHEMA,
-  DEFAULT_MCP_PRIMITIVES_SCHEMA
+  MCPTool,
+  MCPPrimitive,
+  MODEL_CARD_FIELDS,
+  MCP_COMPONENT_TYPES,
+  MCP_PERMISSION_LEVELS
 };
