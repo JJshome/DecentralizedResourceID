@@ -1,6 +1,6 @@
 # Decentralized Digital Resource Integrated ID System (DDRIS)
 
-![Main Architecture](https://github.com/JJshome/DecentralizedResourceID/raw/main/doc/images/ddris-architecture.svg)
+<img src="doc/images/ddris-architecture.svg" alt="Main Architecture" width="800">
 
 DDRIS is a comprehensive framework for managing digital resources across distributed environments. It provides a unified identification and management system for various types of digital assets including text, images, audio, video, AI models, datasets, and executable code.
 
@@ -16,7 +16,7 @@ DDRIS addresses these challenges through:
 4. **Integrity Verification** - Validates the integrity of resources using cryptographic techniques
 5. **Relationship Management** - Defines and manages relationships between multiple digital resources
 
-![Resource Relationships](https://github.com/JJshome/DecentralizedResourceID/raw/main/doc/images/resource-relationships.svg)
+<img src="doc/images/resource-relationships.svg" alt="Resource Relationships" width="700">
 
 ## Key Components
 
@@ -31,7 +31,7 @@ DDRIS uses W3C Decentralized Identifiers (DIDs) as the foundation for resource i
 
 ### Hierarchical Metadata Architecture
 
-![Metadata Architecture](https://github.com/JJshome/DecentralizedResourceID/raw/main/doc/images/metadata-hierarchy.svg)
+<img src="doc/images/metadata-hierarchy.svg" alt="Metadata Architecture" width="700">
 
 The system implements a layered metadata strategy:
 
@@ -68,7 +68,7 @@ Resources are interconnected through directed graph relationships:
 
 ### Execution Structure Metadata
 
-![Execution Structure](https://github.com/JJshome/DecentralizedResourceID/raw/main/doc/images/execution-structure.svg)
+<img src="doc/images/execution-structure.svg" alt="Execution Structure" width="700">
 
 For executable digital resources, DDRIS provides:
 
