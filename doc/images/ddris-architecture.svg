@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <defs>
+    <!-- Gradient definitions -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8f9fa" />
+      <stop offset="100%" stop-color="#e9ecef" />
+    </linearGradient>
+    <linearGradient id="componentGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4361ee" />
+      <stop offset="100%" stop-color="#3a0ca3" />
+    </linearGradient>
+    <linearGradient id="componentGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7209b7" />
+      <stop offset="100%" stop-color="#560bad" />
+    </linearGradient>
+    <linearGradient id="componentGradient3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f72585" />
+      <stop offset="100%" stop-color="#b5179e" />
+    </linearGradient>
+    <linearGradient id="componentGradient4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4cc9f0" />
+      <stop offset="100%" stop-color="#4895ef" />
+    </linearGradient>
+    <linearGradient id="componentGradient5" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff9e00" />
+      <stop offset="100%" stop-color="#ff7a00" />
+    </linearGradient>
+    <linearGradient id="componentGradient6" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38b000" />
+      <stop offset="100%" stop-color="#008000" />
+    </linearGradient>
+    
+    <!-- Filter for shadow effect -->
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="3" dy="3" stdDeviation="5" flood-opacity="0.3" />
+    </filter>
+    
+    <!-- Animation for data flow -->
+    <circle id="dataDot" r="5" fill="#fff">
+      <animate attributeName="opacity" values="0;1;0" dur="3s" repeatCount="indefinite" />
+    </circle>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="url(#bgGradient)" />
+  
+  <!-- Title -->
+  <text x="400" y="50" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#212529" text-anchor="middle">
+    Decentralized Digital Resource Integrated ID System
+  </text>
+  
+  <!-- Core System Box -->
+  <rect x="250" y="100" width="300" height="200" rx="20" ry="20" fill="#fff" filter="url(#shadow)" />
+  <text x="400" y="130" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#212529" text-anchor="middle">DDRIS Core</text>
+  
+  <!-- Components inside core -->
+  <g>
+    <!-- Identifier Generator -->
+    <rect x="270" y="150" width="120" height="40" rx="10" ry="10" fill="url(#componentGradient1)" filter="url(#shadow)" />
+    <text x="330" y="175" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle">Identifier Generator</text>
+    
+    <!-- Metadata Creator -->
+    <rect x="270" y="200" width="120" height="40" rx="10" ry="10" fill="url(#componentGradient2)" filter="url(#shadow)" />
+    <text x="330" y="225" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle">Metadata Creator</text>
+    
+    <!-- Signature Generator -->
+    <rect x="410" y="150" width="120" height="40" rx="10" ry="10" fill="url(#componentGradient3)" filter="url(#shadow)" />
+    <text x="470" y="175" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle">Signature Generator</text>
+    
+    <!-- Watermark Embedder -->
+    <rect x="410" y="200" width="120" height="40" rx="10" ry="10" fill="url(#componentGradient4)" filter="url(#shadow)" />
+    <text x="470" y="225" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle">Watermark Embedder</text>
+  </g>
+  
+  <!-- Distributed Systems -->
+  <g>
+    <!-- Blockchain Registry -->
+    <rect x="100" y="350" width="150" height="80" rx="15" ry="15" fill="url(#componentGradient5)" filter="url(#shadow)" />
+    <text x="175" y="380" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white" text-anchor="middle">Distributed Registry</text>
+    <text x="175" y="400" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle">DLT & Smart Contracts</text>
+    
+    <!-- Relationship Manager -->
+    <rect x="325" y="350" width="150" height="80" rx="15" ry="15" fill="url(#componentGradient6)" filter="url(#shadow)" />
+    <text x="400" y="380" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white" text-anchor="middle">Relationship Manager</text>
+    <text x="400" y="400" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle">Directed Graph Model</text>
+    
+    <!-- Context Manager -->
+    <rect x="550" y="350" width="150" height="80" rx="15" ry="15" fill="url(#componentGradient1)" filter="url(#shadow)" />
+    <text x="625" y="380" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white" text-anchor="middle">Context Manager</text>
+    <text x="625" y="400" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle">Resource-specific Context</text>
+  </g>
+  
+  <!-- Digital Resources -->
+  <g>
+    <!-- Text -->
+    <rect x="150" y="500" width="80" height="60" rx="10" ry="10" fill="url(#componentGradient2)" filter="url(#shadow)" />
+    <text x="190" y="535" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle">Text</text>
+    
+    <!-- Image -->
+    <rect x="270" y="500" width="80" height="60" rx="10" ry="10" fill="url(#componentGradient3)" filter="url(#shadow)" />
+    <text x="310" y="535" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle">Image</text>
+    
+    <!-- Audio -->
+    <rect x="390" y="500" width="80" height="60" rx="10" ry="10" fill="url(#componentGradient4)" filter="url(#shadow)" />
+    <text x="430" y="535" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle">Audio</text>
+    
+    <!-- AI Model -->
+    <rect x="510" y="500" width="80" height="60" rx="10" ry="10" fill="url(#componentGradient5)" filter="url(#shadow)" />
+    <text x="550" y="535" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle">AI Model</text>
+    
+    <!-- Dataset -->
+    <rect x="630" y="500" width="80" height="60" rx="10" ry="10" fill="url(#componentGradient6)" filter="url(#shadow)" />
+    <text x="670" y="535" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle">Dataset</text>
+  </g>
+  
+  <!-- Connection lines -->
+  <g stroke="#6c757d" stroke-width="2" fill="none">
+    <!-- Core to Components -->
+    <path d="M 330 240 L 330 320 L 175 320 L 175 350" />
+    <path d="M 400 240 L 400 350" />
+    <path d="M 470 240 L 470 320 L 625 320 L 625 350" />
+    
+    <!-- Components to Resources -->
+    <path d="M 175 430 L 175 500" />
+    <path d="M 400 430 L 400 470 L 310 470 L 310 500" />
+    <path d="M 400 430 L 400 470 L 430 470 L 430 500" />
+    <path d="M 625 430 L 625 470 L 550 470 L 550 500" />
+    <path d="M 625 430 L 625 470 L 670 470 L 670 500" />
+  </g>
+  
+  <!-- Animated data flows -->
+  <g>
+    <use xlink:href="#dataDot">
+      <animateMotion path="M 330 180 L 400 180 L 470 180" dur="3s" repeatCount="indefinite" />
+    </use>
+    <use xlink:href="#dataDot">
+      <animateMotion path="M 330 220 L 400 220 L 470 220" dur="3s" repeatCount="indefinite" />
+    </use>
+    <use xlink:href="#dataDot">
+      <animateMotion path="M 400 240 L 400 350" dur="2s" repeatCount="indefinite" />
+    </use>
+    <use xlink:href="#dataDot">
+      <animateMotion path="M 175 430 L 175 500" dur="2s" repeatCount="indefinite" />
+    </use>
+    <use xlink:href="#dataDot">
+      <animateMotion path="M 625 430 L 625 470 L 550 470 L 550 500" dur="2s" repeatCount="indefinite" />
+    </use>
+  </g>
+  
+  <!-- Cartoon Character - Guide -->
+  <g transform="translate(720, 100)">
+    <circle cx="0" cy="0" r="30" fill="#4cc9f0" />
+    <circle cx="-10" cy="-5" r="5" fill="white" />
+    <circle cx="10" cy="-5" r="5" fill="white" />
+    <circle cx="-10" cy="-5" r="2" fill="black" />
+    <circle cx="10" cy="-5" r="2" fill="black" />
+    <path d="M -10 10 Q 0 20 10 10" stroke="white" stroke-width="2" fill="none" />
+    
+    <!-- Blinking animation -->
+    <rect x="-15" y="-10" width="10" height="2" fill="black">
+      <animate attributeName="opacity" values="0;0;1;0;0" dur="5s" repeatCount="indefinite" />
+    </rect>
+    <rect x="5" y="-10" width="10" height="2" fill="black">
+      <animate attributeName="opacity" values="0;0;1;0;0" dur="5s" repeatCount="indefinite" />
+    </rect>
+    
+    <!-- Speech bubble -->
+    <path d="M -40 -40 L -80 -60 L -40 -70 Z" fill="#fff" />
+    <rect x="-170" y="-100" width="130" height="40" rx="10" ry="10" fill="#fff" />
+    <text x="-105" y="-75" font-family="Arial, sans-serif" font-size="10" fill="#212529" text-anchor="middle">Secure ID system for all your digital resources!</text>
+  </g>
+</svg>
